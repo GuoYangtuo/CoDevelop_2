@@ -1,0 +1,54 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #1a1a1a;
+    color: #fff;
+    text-align: center;
+}
+
+.home-page h1 {
+    color: #f44336;
+    margin-bottom: 20px;
+}
+
+.home-page p {
+    color: #888;
+    margin-bottom: 30px;
+}
+
+.admin-link {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.admin-link:hover {
+    background-color: #45a049;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1a1a1a;
+    color: #fff;
+    font-size: 20px;
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1a1a1a;
+    color: #f44336;
+    font-size: 20px;
+} 

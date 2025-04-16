@@ -1,0 +1,186 @@
+{
+  "nodes": [
+    {
+      "id": "1744782019147",
+      "text": "我是代码贡献者",
+      "children": [
+        {
+          "id": "1744782050565",
+          "text": "合并流程",
+          "children": [
+            {
+              "id": "1744782063540",
+              "text": "clone最新分支",
+              "children": [],
+              "createdAt": "2025-04-16T05:41:03.540Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "",
+              "isCategory": true,
+              "supporters": {}
+            },
+            {
+              "id": "1744782119621",
+              "text": "在导图页面选择一个节点，进行本地开发",
+              "children": [
+                {
+                  "id": "1744782364430",
+                  "text": "安装cursor和godot",
+                  "children": [],
+                  "createdAt": "2025-04-16T05:46:04.430Z",
+                  "createdBy": "admin",
+                  "creatorName": "admin",
+                  "details": "",
+                  "isCategory": true,
+                  "supporters": {}
+                },
+                {
+                  "id": "1744782379791",
+                  "text": "在cursor上安装godot-tools插件",
+                  "children": [],
+                  "createdAt": "2025-04-16T05:46:19.791Z",
+                  "createdBy": "admin",
+                  "creatorName": "admin",
+                  "details": "",
+                  "isCategory": true,
+                  "supporters": {}
+                },
+                {
+                  "id": "1744782436649",
+                  "text": "按cursor内要求配置godot编辑器的路径",
+                  "children": [],
+                  "createdAt": "2025-04-16T05:47:16.649Z",
+                  "createdBy": "admin",
+                  "creatorName": "admin",
+                  "details": "",
+                  "isCategory": true,
+                  "supporters": {}
+                },
+                {
+                  "id": "1744782471809",
+                  "text": "用godot编辑器和cursor同时打开项目目录",
+                  "children": [],
+                  "createdAt": "2025-04-16T05:47:51.809Z",
+                  "createdBy": "admin",
+                  "creatorName": "admin",
+                  "details": "",
+                  "isCategory": true,
+                  "supporters": {},
+                  "comments": [
+                    {
+                      "id": "1744789824077",
+                      "text": "awdwadawda",
+                      "author": "admin",
+                      "createdAt": "2025-04-16T07:50:24.077Z"
+                    },
+                    {
+                      "id": "1744789828318",
+                      "text": "dawdadadwad",
+                      "author": "admin",
+                      "createdAt": "2025-04-16T07:50:28.318Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "1744782520514",
+                  "text": "和ai对话，测试游戏，调试bug",
+                  "children": [],
+                  "createdAt": "2025-04-16T05:48:40.514Z",
+                  "createdBy": "admin",
+                  "creatorName": "admin",
+                  "details": "",
+                  "isCategory": true,
+                  "supporters": {}
+                },
+                {
+                  "id": "1744782530206",
+                  "text": "完成开发",
+                  "children": [],
+                  "createdAt": "2025-04-16T05:48:50.206Z",
+                  "createdBy": "admin",
+                  "creatorName": "admin",
+                  "details": "",
+                  "isCategory": true,
+                  "supporters": {}
+                }
+              ],
+              "createdAt": "2025-04-16T05:41:59.621Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "展开可查看推荐的开发流程\n之后需要的话会录视频演示",
+              "isCategory": true,
+              "supporters": {},
+              "comments": [
+                {
+                  "id": "1744789461386",
+                  "text": "dwdadwad",
+                  "author": "admin",
+                  "createdAt": "2025-04-16T07:44:21.386Z"
+                },
+                {
+                  "id": "1744789471855",
+                  "text": "awdadawdawdawdawdad",
+                  "author": "admin",
+                  "createdAt": "2025-04-16T07:44:31.855Z"
+                },
+                {
+                  "id": "1744789505382",
+                  "text": "ddawd",
+                  "author": "admin212",
+                  "createdAt": "2025-04-16T07:45:05.382Z"
+                }
+              ]
+            },
+            {
+              "id": "1744782173684",
+              "text": "开发完成，拉取最新仓库，解决你本地仓库和最新仓库的冲突",
+              "children": [],
+              "createdAt": "2025-04-16T05:42:53.684Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "",
+              "isCategory": true,
+              "supporters": {}
+            },
+            {
+              "id": "1744782210296",
+              "text": "发起合并请求",
+              "children": [],
+              "createdAt": "2025-04-16T05:43:30.296Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "",
+              "isCategory": true,
+              "supporters": {}
+            },
+            {
+              "id": "1744782259346",
+              "text": "等待合并通过投票",
+              "children": [],
+              "createdAt": "2025-04-16T05:44:19.346Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "",
+              "isCategory": true,
+              "supporters": {}
+            }
+          ],
+          "createdAt": "2025-04-16T05:40:50.565Z",
+          "createdBy": "admin",
+          "creatorName": "admin",
+          "details": "这并不是一个开源项目的标准贡献流程，但我目前希望它尽量保持简单",
+          "isCategory": true,
+          "supporters": {}
+        }
+      ],
+      "createdAt": "2025-04-16T05:40:19.147Z",
+      "createdBy": "admin",
+      "creatorName": "admin",
+      "details": "",
+      "isCategory": true,
+      "supporters": {}
+    }
+  ],
+  "updatedAt": "2025-04-16T07:50:28.322Z",
+  "isReadOnly": true
+}

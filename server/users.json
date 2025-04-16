@@ -1,0 +1,63 @@
+{
+  "users": [
+    {
+      "id": "f4caaf1c-4863-4e96-ad77-fa385e16fca2",
+      "username": "aw",
+      "password": "aw",
+      "createdAt": "2025-04-15T10:05:39.840Z"
+    },
+    {
+      "id": "fc7a61a6-777a-41a8-ae41-3d721eab8c0d",
+      "username": "de",
+      "password": "de",
+      "createdAt": "2025-04-15T10:05:56.514Z"
+    },
+    {
+      "id": "0eceedb5-dcf7-4f1b-993b-d49adaad9111",
+      "username": "awd",
+      "password": "awd",
+      "createdAt": "2025-04-15T10:06:27.201Z"
+    },
+    {
+      "id": "5f184dc3-b3a9-4e58-a669-d400e57def94",
+      "username": "fse",
+      "password": "as",
+      "createdAt": "2025-04-15T11:05:45.961Z"
+    },
+    {
+      "id": "admin",
+      "username": "admin",
+      "password": "hh20061202!",
+      "createdAt": "2025-04-15T12:12:11.469Z",
+      "isAdmin": true
+    },
+    {
+      "id": "1d01975e-0487-4519-ac95-eaa3427ff8ed",
+      "username": "wd",
+      "password": "wd",
+      "createdAt": "2025-04-15T12:17:10.069Z",
+      "isAdmin": false
+    },
+    {
+      "id": "3b6db16b-4606-4bbf-bc57-73e16341b1be",
+      "username": "dw",
+      "password": "dw",
+      "createdAt": "2025-04-15T15:29:49.926Z",
+      "isAdmin": false
+    },
+    {
+      "id": "04508525-cfa1-4f74-bd73-cfc66054cbbc",
+      "username": "fe",
+      "password": "fe",
+      "createdAt": "2025-04-15T15:31:24.785Z",
+      "isAdmin": false
+    },
+    {
+      "id": "b41dfc09-ae00-4883-a0d2-1a5738c2dfb9",
+      "username": "guoyangtuo",
+      "password": "hh20061202",
+      "createdAt": "2025-04-16T05:32:55.543Z",
+      "isAdmin": false
+    }
+  ]
+}
