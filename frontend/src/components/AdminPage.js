@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
+import { createApiPath } from '../config';
 import Auth from './Auth';
 import './AdminPage.css';
 
@@ -25,7 +26,7 @@ const AdminPage = () => {
 
     const loadProjects = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/api/projects');
+            const response = await axios.get(createApiPath('api/projects'));
             setProjects(response.data);
             setLoading(false);
         } catch (error) {
@@ -51,7 +52,7 @@ const AdminPage = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:3001/api/projects', {
+            const response = await axios.post(createApiPath('api/projects'), {
                 name: newProjectName
             });
             setProjects([...projects, response.data]);
@@ -65,7 +66,7 @@ const AdminPage = () => {
     const handleEditProject = async (project) => {
         if (editProject) {
             try {
-                const response = await axios.put(`http://localhost:3001/api/projects/${project.id}`, {
+                const response = await axios.put(createApiPath(`api/projects/${project.id}`), {
                     name: newProjectName
                 });
                 setProjects(projects.map(p => p.id === project.id ? response.data : p));
@@ -83,7 +84,7 @@ const AdminPage = () => {
 
     const handleDeleteProject = async (projectId) => {
         try {
-            await axios.delete(`http://localhost:3001/api/projects/${projectId}`);
+            await axios.delete(createApiPath(`api/projects/${projectId}`));
             setProjects(projects.filter(p => p.id !== projectId));
             setError('');
         } catch (error) {

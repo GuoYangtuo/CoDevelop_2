@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
+import { createApiPath } from '../config';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -9,19 +10,19 @@ const HomePage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const loadProjects = async () => {
+        const fetchProjects = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/api/projects');
+                const response = await axios.get(createApiPath('api/projects'));
                 setProjects(response.data);
                 setLoading(false);
             } catch (error) {
-                console.error('Failed to load projects:', error);
+                console.error('Failed to fetch projects:', error);
                 setError('无法加载项目列表');
                 setLoading(false);
             }
         };
 
-        loadProjects();
+        fetchProjects();
     }, []);
 
     if (loading) {

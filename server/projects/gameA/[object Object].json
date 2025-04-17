@@ -1,0 +1,152 @@
+{
+  "name": "游戏功能",
+  "createdAt": "2025-04-17T04:07:51.222Z",
+  "createdBy": "admin",
+  "nodes": [
+    {
+      "id": "1744867068374",
+      "text": "玩家",
+      "children": [
+        {
+          "id": "1744867082093",
+          "text": "基本属性",
+          "children": [],
+          "createdAt": "2025-04-17T05:18:02.093Z",
+          "createdBy": "b41dfc09-ae00-4883-a0d2-1a5738c2dfb9",
+          "creatorName": "guoyangtuo",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        }
+      ],
+      "createdAt": "2025-04-17T05:17:48.374Z",
+      "createdBy": "b41dfc09-ae00-4883-a0d2-1a5738c2dfb9",
+      "creatorName": "guoyangtuo",
+      "details": "",
+      "isCategory": true,
+      "supporters": {},
+      "comments": [],
+      "supportCount": 0
+    },
+    {
+      "id": "1744867093909",
+      "text": "物品系统",
+      "children": [
+        {
+          "id": "1744867112445",
+          "text": "武器装备系统",
+          "children": [
+            {
+              "id": "1744867868176",
+              "text": "d",
+              "children": [],
+              "createdAt": "2025-04-17T05:31:08.176Z",
+              "createdBy": "f4caaf1c-4863-4e96-ad77-fa385e16fca2",
+              "creatorName": "aw",
+              "details": "",
+              "isCategory": false,
+              "supporters": {
+                "aw": {
+                  "amount": 23,
+                  "date": "2025-04-17T05:37:34.201Z",
+                  "period": 30,
+                  "expireDate": "2025-05-17T05:37:34.201Z"
+                }
+              },
+              "comments": [],
+              "supportCount": 1,
+              "amount": 23,
+              "type": "FEATURE"
+            }
+          ],
+          "createdAt": "2025-04-17T05:18:32.445Z",
+          "createdBy": "b41dfc09-ae00-4883-a0d2-1a5738c2dfb9",
+          "creatorName": "guoyangtuo",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        },
+        {
+          "id": "1744867130653",
+          "text": "背包系统",
+          "children": [],
+          "createdAt": "2025-04-17T05:18:50.653Z",
+          "createdBy": "b41dfc09-ae00-4883-a0d2-1a5738c2dfb9",
+          "creatorName": "guoyangtuo",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        },
+        {
+          "id": "1744867156807",
+          "text": "饮食系统",
+          "children": [],
+          "createdAt": "2025-04-17T05:19:16.807Z",
+          "createdBy": "b41dfc09-ae00-4883-a0d2-1a5738c2dfb9",
+          "creatorName": "guoyangtuo",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        },
+        {
+          "id": "1744867165269",
+          "text": "特殊道具",
+          "children": [],
+          "createdAt": "2025-04-17T05:19:25.269Z",
+          "createdBy": "b41dfc09-ae00-4883-a0d2-1a5738c2dfb9",
+          "creatorName": "guoyangtuo",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        }
+      ],
+      "createdAt": "2025-04-17T05:18:13.909Z",
+      "createdBy": "b41dfc09-ae00-4883-a0d2-1a5738c2dfb9",
+      "creatorName": "guoyangtuo",
+      "details": "",
+      "isCategory": true,
+      "supporters": {},
+      "comments": [],
+      "supportCount": 0
+    },
+    {
+      "id": "1744867103325",
+      "text": "效果系统",
+      "children": [
+        {
+          "id": "1744867177745",
+          "text": "药水系统",
+          "children": [],
+          "createdAt": "2025-04-17T05:19:37.745Z",
+          "createdBy": "b41dfc09-ae00-4883-a0d2-1a5738c2dfb9",
+          "creatorName": "guoyangtuo",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        }
+      ],
+      "createdAt": "2025-04-17T05:18:23.325Z",
+      "createdBy": "b41dfc09-ae00-4883-a0d2-1a5738c2dfb9",
+      "creatorName": "guoyangtuo",
+      "details": "",
+      "isCategory": true,
+      "supporters": {},
+      "comments": [],
+      "supportCount": 0
+    }
+  ],
+  "isReadOnly": false,
+  "updatedAt": "2025-04-17T06:49:23.094Z"
+}

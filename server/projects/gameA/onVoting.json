@@ -1,0 +1,151 @@
+{
+  "nodes": [
+    {
+      "id": "1744782436649",
+      "text": "按cursor内要求配置godot编辑器的路径",
+      "children": [
+        {
+          "id": "1744821358523",
+          "text": "12313123",
+          "children": [],
+          "createdAt": "2025-04-16T16:35:58.523Z",
+          "createdBy": "f4caaf1c-4863-4e96-ad77-fa385e16fca2",
+          "creatorName": "aw",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        },
+        {
+          "id": "1744821375196",
+          "text": "1231232",
+          "children": [
+            {
+              "id": "1744821465012",
+              "text": "wadawd",
+              "children": [],
+              "createdAt": "2025-04-16T16:37:45.012Z",
+              "createdBy": "f4caaf1c-4863-4e96-ad77-fa385e16fca2",
+              "creatorName": "aw",
+              "details": "",
+              "isCategory": false,
+              "supporters": {},
+              "comments": [],
+              "supportCount": 0,
+              "amount": 0,
+              "type": "FEATURE"
+            }
+          ],
+          "createdAt": "2025-04-16T16:36:15.196Z",
+          "createdBy": "f4caaf1c-4863-4e96-ad77-fa385e16fca2",
+          "creatorName": "aw",
+          "details": "",
+          "isCategory": false,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0,
+          "amount": 0,
+          "type": "FEATURE"
+        }
+      ],
+      "createdAt": "2025-04-16T05:47:16.649Z",
+      "createdBy": "admin",
+      "creatorName": "admin",
+      "details": "",
+      "isCategory": true,
+      "supporters": {},
+      "submittedBy": "dawd",
+      "submittedAt": "2025-04-16T15:17:37.515Z",
+      "description": "dawdaw",
+      "upvotes": [
+        "f4caaf1c-4863-4e96-ad77-fa385e16fca2"
+      ],
+      "downvotes": [],
+      "comments": [
+        {
+          "id": "1744821575647",
+          "author": "aw",
+          "createdAt": "2025-04-16T16:39:35.647Z",
+          "text": "awdawdadaw"
+        },
+        {
+          "id": "1744821578136",
+          "author": "aw",
+          "createdAt": "2025-04-16T16:39:38.136Z",
+          "text": "adwdad"
+        }
+      ]
+    },
+    {
+      "id": "1744821367988",
+      "text": "123123123",
+      "children": [
+        {
+          "id": "1744821370667",
+          "text": "123123",
+          "children": [
+            {
+              "id": "1744821380019",
+              "text": "1233",
+              "children": [],
+              "createdAt": "2025-04-16T16:36:20.019Z",
+              "createdBy": "f4caaf1c-4863-4e96-ad77-fa385e16fca2",
+              "creatorName": "aw",
+              "details": "",
+              "isCategory": false,
+              "supporters": {},
+              "comments": [],
+              "supportCount": 0,
+              "amount": 0,
+              "type": "FEATURE"
+            },
+            {
+              "id": "1744821423796",
+              "text": "awd",
+              "children": [],
+              "createdAt": "2025-04-16T16:37:03.796Z",
+              "createdBy": "f4caaf1c-4863-4e96-ad77-fa385e16fca2",
+              "creatorName": "aw",
+              "details": "",
+              "isCategory": false,
+              "supporters": {},
+              "comments": [],
+              "supportCount": 0,
+              "amount": 0,
+              "type": "FEATURE"
+            }
+          ],
+          "createdAt": "2025-04-16T16:36:10.667Z",
+          "createdBy": "f4caaf1c-4863-4e96-ad77-fa385e16fca2",
+          "creatorName": "aw",
+          "details": "",
+          "isCategory": false,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 1,
+          "amount": 0,
+          "type": "FEATURE"
+        }
+      ],
+      "createdAt": "2025-04-16T16:36:07.988Z",
+      "createdBy": "f4caaf1c-4863-4e96-ad77-fa385e16fca2",
+      "creatorName": "aw",
+      "details": "",
+      "isCategory": false,
+      "supporters": {},
+      "comments": [
+        {
+          "id": "1744821572905",
+          "author": "aw",
+          "createdAt": "2025-04-16T16:39:32.905Z",
+          "text": "adaw"
+        }
+      ],
+      "supportCount": 1,
+      "amount": 0,
+      "type": "FEATURE"
+    }
+  ],
+  "updatedAt": "2025-04-16T16:39:43.089Z"
+}

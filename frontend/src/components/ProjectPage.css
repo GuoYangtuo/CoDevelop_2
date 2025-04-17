@@ -130,6 +130,12 @@
     padding: 20px;
     overflow: auto;
     background-color: #1a1a1a;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    position: relative;
+    user-select: none;
 }
 
 .main-content.expanded {
@@ -373,4 +379,212 @@
 
 .modal-actions button:last-child:hover {
     background-color: #444;
+}
+
+/* 把下载按钮改为投票按钮 */
+.voting-button {
+    background-color: #5c6bc0;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.voting-button:hover {
+    background-color: #7986cb;
+}
+
+/* 投票模态框样式 */
+.voting-modal-content {
+    background-color: #2d2d2d;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    border-radius: 5px;
+    padding: 20px;
+    position: relative;
+    overflow-y: auto;
+    color: #fff;
+}
+
+.voting-nodes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.voting-node-item {
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: #1a1a1a;
+}
+
+.voting-node-header {
+    margin-bottom: 10px;
+}
+
+.voting-node-header h4 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    color: #fff;
+}
+
+.voting-node-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+    color: #888;
+    flex-wrap: wrap;
+}
+
+.voting-node-description {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #2a2a2a;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.voting-node-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.vote-count {
+    display: flex;
+    gap: 15px;
+    color: #ccc;
+}
+
+.upvote-count, .downvote-count {
+    font-weight: bold;
+}
+
+.voting-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.upvote-button, .downvote-button, .comment-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.upvote-button {
+    background-color: #5c6bc0;
+    color: white;
+}
+
+.upvote-button:hover {
+    background-color: #7986cb;
+}
+
+.downvote-button {
+    background-color: #ef5350;
+    color: white;
+}
+
+.downvote-button:hover {
+    background-color: #e57373;
+}
+
+.comment-button {
+    background-color: #4a4a4a;
+    color: white;
+}
+
+.comment-button:hover {
+    background-color: #5a5a5a;
+}
+
+.comment-area {
+    margin-top: 15px;
+    border-top: 1px solid #444;
+    padding-top: 15px;
+}
+
+.comment-area h5 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #ccc;
+}
+
+.no-comments, .no-voting-nodes {
+    color: #888;
+    font-style: italic;
+}
+
+.comments-list {
+    margin-bottom: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.comment-item {
+    padding: 8px;
+    border-bottom: 1px solid #444;
+    margin-bottom: 5px;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: #9fa8da;
+}
+
+.comment-date {
+    color: #888;
+}
+
+.comment-text {
+    font-size: 14px;
+    color: #ccc;
+}
+
+.add-comment textarea {
+    width: 100%;
+    resize: vertical;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #444;
+    border-radius: 3px;
+    background-color: #1a1a1a;
+    color: #fff;
+}
+
+.add-comment button {
+    background-color: #5c6bc0;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.add-comment button:hover {
+    background-color: #7986cb;
 } 

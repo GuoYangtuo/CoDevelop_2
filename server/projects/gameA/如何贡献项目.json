@@ -1,0 +1,206 @@
+{
+  "nodes": [
+    {
+      "id": "1744867427157",
+      "text": "我是玩家",
+      "children": [
+        {
+          "id": "1744867467956",
+          "text": "你可以在这里提出任何建议，反馈bug和需要性能优化的部分",
+          "children": [],
+          "createdAt": "2025-04-17T05:24:27.956Z",
+          "createdBy": "admin",
+          "creatorName": "admin",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        },
+        {
+          "id": "1744867552052",
+          "text": "你可以在任意节点下添加提案，但只能修改你自己创建的节点",
+          "children": [],
+          "createdAt": "2025-04-17T05:25:52.052Z",
+          "createdBy": "admin",
+          "creatorName": "admin",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        },
+        {
+          "id": "1744867652342",
+          "text": "请保持一个开源拥护者的素质，创建严肃认真的建议，合理分类，这有助于我们根据你的需要改进！",
+          "children": [],
+          "createdAt": "2025-04-17T05:27:32.342Z",
+          "createdBy": "admin",
+          "creatorName": "admin",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        },
+        {
+          "id": "1744867984013",
+          "text": "点击卡片右下角的“↑”箭头对卡片表示支持，这有助于合理安排开发重心",
+          "children": [],
+          "createdAt": "2025-04-17T05:33:04.013Z",
+          "createdBy": "admin",
+          "creatorName": "admin",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        }
+      ],
+      "createdAt": "2025-04-17T05:23:47.157Z",
+      "createdBy": "admin",
+      "creatorName": "admin",
+      "details": "",
+      "isCategory": true,
+      "supporters": {},
+      "comments": [],
+      "supportCount": 0
+    },
+    {
+      "id": "1744782019147",
+      "text": "我是代码贡献者",
+      "children": [
+        {
+          "id": "1744782050565",
+          "text": "合并流程",
+          "children": [
+            {
+              "id": "1744782063540",
+              "text": "fork和clone最新分支",
+              "children": [],
+              "createdAt": "2025-04-16T05:41:03.540Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "git clone https://gitee.com/guoyangtuo/aigame.git",
+              "isCategory": true,
+              "supporters": {}
+            },
+            {
+              "id": "1744782119621",
+              "text": "在导图页面选择一个节点，进行本地开发",
+              "children": [],
+              "createdAt": "2025-04-16T05:41:59.621Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "展开可查看推荐的开发流程\n之后需要的话会录视频演示",
+              "isCategory": true,
+              "supporters": {},
+              "comments": []
+            },
+            {
+              "id": "1744782173684",
+              "text": "开发完成，拉取最新仓库，解决你本地仓库和最新仓库的冲突",
+              "children": [],
+              "createdAt": "2025-04-16T05:42:53.684Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "",
+              "isCategory": true,
+              "supporters": {}
+            },
+            {
+              "id": "1744782210296",
+              "text": "在gitee上发起合并请求",
+              "children": [],
+              "createdAt": "2025-04-16T05:43:30.296Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "",
+              "isCategory": true,
+              "supporters": {}
+            },
+            {
+              "id": "1744866564783",
+              "text": "回到该页面，在你开发的节点上提交",
+              "children": [],
+              "createdAt": "2025-04-17T05:09:24.783Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "",
+              "isCategory": true,
+              "supporters": {},
+              "comments": [],
+              "supportCount": 0
+            },
+            {
+              "id": "1744782259346",
+              "text": "等待合并通过投票",
+              "children": [],
+              "createdAt": "2025-04-16T05:44:19.346Z",
+              "createdBy": "admin",
+              "creatorName": "admin",
+              "details": "",
+              "isCategory": true,
+              "supporters": {}
+            }
+          ],
+          "createdAt": "2025-04-16T05:40:50.565Z",
+          "createdBy": "admin",
+          "creatorName": "admin",
+          "details": "贡献流程可能并不标准，但我目前希望它尽量保持简单",
+          "isCategory": true,
+          "supporters": {},
+          "supportCount": 1
+        }
+      ],
+      "createdAt": "2025-04-16T05:40:19.147Z",
+      "createdBy": "admin",
+      "creatorName": "admin",
+      "details": "",
+      "isCategory": true,
+      "supporters": {}
+    },
+    {
+      "id": "1744866652575",
+      "text": "一些说明",
+      "children": [
+        {
+          "id": "1744866725846",
+          "text": "目前投票合并流程还是手动的，后续如果需要会做自动化构建和自动根据投票合并，并且省去手动“提交”的过程",
+          "children": [],
+          "createdAt": "2025-04-17T05:12:05.846Z",
+          "createdBy": "admin",
+          "creatorName": "admin",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        },
+        {
+          "id": "1744866786631",
+          "text": "目前捐赠功能还无法使用，因为ai开发会卡在付款api上，后续我会手动完善",
+          "children": [],
+          "createdAt": "2025-04-17T05:13:06.631Z",
+          "createdBy": "admin",
+          "creatorName": "admin",
+          "details": "",
+          "isCategory": true,
+          "supporters": {},
+          "comments": [],
+          "supportCount": 0
+        }
+      ],
+      "createdAt": "2025-04-17T05:10:52.575Z",
+      "createdBy": "admin",
+      "creatorName": "admin",
+      "details": "",
+      "isCategory": true,
+      "supporters": {},
+      "comments": [],
+      "supportCount": 0
+    }
+  ],
+  "updatedAt": "2025-04-17T06:48:11.292Z",
+  "isReadOnly": true
+}

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { createApiPath } from '../config';
 import { useParams, Navigate } from 'react-router-dom';
 import MindMap from './MindMap';
 import Auth from './Auth';
@@ -14,11 +15,30 @@ const ProjectPage = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [projectExists, setProjectExists] = useState(true);
-    const [showDownloadModal, setShowDownloadModal] = useState(false);
-    const [updateLogs, setUpdateLogs] = useState({});
+    const [showVotingModal, setShowVotingModal] = useState(false);
+    const [votingNodes, setVotingNodes] = useState([]);
     const [showReadOnlyModal, setShowReadOnlyModal] = useState(false);
     const [newMindmapName, setNewMindmapName] = useState('');
     const [newMindmapReadOnly, setNewMindmapReadOnly] = useState(false);
+    const [error, setError] = useState('');
+    const [newComment, setNewComment] = useState('');
+    const [activeNodeId, setActiveNodeId] = useState(null);
+    const [showCommentArea, setShowCommentArea] = useState(false);
+    
+    // 用户投票记录
+    const [votedNodes, setVotedNodes] = useState(() => {
+        const saved = localStorage.getItem('votedNodes');
+        return saved ? JSON.parse(saved) : {};
+    });
+    
+    // 为思维导图添加ref
+    const mindmapRef = useRef(null);
+    
+    // 点击外部区域处理函数
+    const handleClickOutside = (e) => {
+        // 这个函数将会传递给MindMap组件
+        // 在MindMap组件中它会被用于处理节点选择逻辑
+    };
 
     useEffect(() => {
         const savedUser = localStorage.getItem('user');
@@ -30,21 +50,8 @@ const ProjectPage = () => {
 
     const loadMindmaps = async () => {
         try {
-            const response = await axios.get(`http://localhost:3001/api/projects/${projectId}/mindmaps`);
-            // 过滤掉名为updateLogs.json的文件以及id为updateLogs的导图
-            const filteredMindmaps = response.data.filter(mindmap => 
-                mindmap.id !== 'updateLogs.json' && mindmap.id !== 'updateLogs'
-            ).map(mindmap => ({
-                ...mindmap,
-                isReadOnly: mindmap.isReadOnly || false // 确保isReadOnly属性存在
-            }));
-            setMindmaps(filteredMindmaps);
-            
-            // 自动选择第一个导图
-            if (filteredMindmaps.length > 0 && !selectedMindmap) {
-                setSelectedMindmap(filteredMindmaps[0].id);
-            }
-            
+            const response = await axios.get(createApiPath(`api/projects/${projectId}/mindmaps`));
+            setMindmaps(response.data);
             setLoading(false);
         } catch (error) {
             console.error('Failed to load mindmaps:', error);
@@ -55,12 +62,15 @@ const ProjectPage = () => {
         }
     };
 
-    const loadUpdateLogs = async () => {
+    const loadVotingNodes = async () => {
+        if (!projectId) return;
+        
         try {
-            const response = await axios.get(`http://localhost:3001/api/projects/${projectId}/updateLogs`);
-            setUpdateLogs(response.data);
+            const response = await axios.get(createApiPath(`api/projects/${projectId}/onVoting.json`));
+            setVotingNodes(response.data?.nodes || []);
         } catch (error) {
-            console.error('Failed to load update logs:', error);
+            console.error('加载投票节点失败:', error);
+            setVotingNodes([]);
         }
     };
 
@@ -74,22 +84,16 @@ const ProjectPage = () => {
         setCurrentUser(null);
     };
 
-    const deleteMindmap = async (mindmapId) => {
-        if (!currentUser || (currentUser.id !== 'admin' && !currentUser.isAdmin)) {
-            alert('只有管理员可以删除思维导图');
-            return;
-        }
-
-        if (true) {
+    const handleDeleteMindmap = async (mindmapId) => {
+        if (window.confirm('确定要删除这个思维导图吗？此操作不可逆！')) {
             try {
-                await axios.delete(`http://localhost:3001/api/projects/${projectId}/mindmaps/${mindmapId}`);
-                loadMindmaps();
-                if (selectedMindmap === mindmapId) {
+                await axios.delete(createApiPath(`api/projects/${projectId}/mindmaps/${mindmapId}`));
+                setMindmaps(mindmaps.filter(m => m.id !== mindmapId));
+                if (selectedMindmap && selectedMindmap.id === mindmapId) {
                     setSelectedMindmap(null);
                 }
             } catch (error) {
                 console.error('Failed to delete mindmap:', error);
-                alert('删除失败，请稍后重试');
             }
         }
     };
@@ -108,34 +112,123 @@ const ProjectPage = () => {
 
     const handleCreateMindmap = async () => {
         if (!newMindmapName.trim()) {
-            alert('请输入导图名称');
+            setError('思维导图名称不能为空');
             return;
         }
-
+        
         try {
-            await axios.post(`http://localhost:3001/api/projects/${projectId}/mindmaps/${newMindmapName}`, {
-                nodes: [],
+            await axios.post(createApiPath(`api/projects/${projectId}/mindmaps/${newMindmapName}`), {
+                name: newMindmapName,
                 createdAt: new Date().toISOString(),
-                createdBy: currentUser.id,
-                creatorName: currentUser.username,
-                isReadOnly: newMindmapReadOnly
+                createdBy: currentUser ? currentUser.userId : 'guest',
+                nodes: [],
+                isReadOnly: false
             });
-            loadMindmaps();
-            setSelectedMindmap(newMindmapName);
+            
+            setNewMindmapName('');
             setShowReadOnlyModal(false);
+            loadMindmaps();
         } catch (error) {
-            console.error('Failed to create mindmap:', error);
-            alert('创建导图失败，请稍后重试');
+            setError(error.response?.data?.error || '创建思维导图失败');
         }
     };
 
-    const handleDownloadClick = () => {
-        setShowDownloadModal(true);
-        loadUpdateLogs();
+    const handleVotingClick = () => {
+        setShowVotingModal(true);
+        loadVotingNodes();
     };
-
-    const downloadLatestRelease = () => {
-        window.open(`http://localhost:3001/api/projects/${projectId}/download`, '_blank');
+    
+    // 处理投票
+    const handleVote = async (nodeId, voteType) => {
+        if (!currentUser) {
+            alert('请先登录后再投票');
+            return;
+        }
+        
+        // 检查用户是否已经投过票
+        if (votedNodes[nodeId]) {
+            alert('您已经对该节点投过票了');
+            return;
+        }
+        
+        try {
+            // 获取当前投票数据
+            const response = await axios.get(createApiPath(`api/projects/${projectId}/onVoting.json`));
+            const votingData = response.data || { nodes: [] };
+            
+            // 更新节点投票
+            const updatedNodes = votingData.nodes.map(node => {
+                if (node.id === nodeId) {
+                    const votes = voteType === 'up' ? [...(node.upvotes || []), currentUser.userId] : [...(node.downvotes || []), currentUser.userId];
+                    return {
+                        ...node,
+                        [voteType === 'up' ? 'upvotes' : 'downvotes']: votes
+                    };
+                }
+                return node;
+            });
+            
+            // 保存更新后的数据
+            await axios.post(createApiPath(`api/projects/${projectId}/onVoting.json`), {
+                ...votingData,
+                nodes: updatedNodes
+            });
+            
+            // 更新本地状态
+            setVotingNodes(updatedNodes);
+            
+            // 记录用户的投票
+            const newVotedNodes = { ...votedNodes, [nodeId]: voteType };
+            setVotedNodes(newVotedNodes);
+            localStorage.setItem('votedNodes', JSON.stringify(newVotedNodes));
+            
+            alert('投票成功');
+        } catch (error) {
+            console.error('投票失败:', error);
+            alert('投票失败');
+        }
+    };
+    
+    // 添加评论
+    const addComment = async () => {
+        if (!activeNodeId || !newComment.trim() || !currentUser) return;
+        
+        try {
+            // 获取当前投票数据
+            const response = await axios.get(createApiPath(`api/projects/${projectId}/onVoting.json`));
+            const votingData = response.data || { nodes: [] };
+            
+            // 添加评论到节点
+            const updatedNodes = votingData.nodes.map(node => {
+                if (node.id === activeNodeId) {
+                    const newCommentObj = {
+                        id: Date.now().toString(),
+                        author: currentUser.username,
+                        createdAt: new Date().toISOString(),
+                        text: newComment
+                    };
+                    
+                    return {
+                        ...node,
+                        comments: [...(node.comments || []), newCommentObj]
+                    };
+                }
+                return node;
+            });
+            
+            // 保存更新后的数据
+            await axios.post(createApiPath(`api/projects/${projectId}/onVoting.json`), {
+                ...votingData,
+                nodes: updatedNodes
+            });
+            
+            // 更新本地状态
+            setVotingNodes(updatedNodes);
+            setNewComment('');
+        } catch (error) {
+            console.error('添加评论失败:', error);
+            alert('添加评论失败');
+        }
     };
 
     if (loading) return <div className="loading">加载中...</div>;
@@ -154,10 +247,10 @@ const ProjectPage = () => {
                     {sidebarCollapsed ? '+' : '-'}
                 </button>
                 <button
-                    className="download-button"
-                    onClick={handleDownloadClick}
+                    className="voting-button"
+                    onClick={handleVotingClick}
                 >
-                    <span role="img" aria-label="download">💾</span>
+                    <span role="img" aria-label="voting">🗳️</span>
                 </button>
             </div>
             
@@ -192,7 +285,7 @@ const ProjectPage = () => {
                                             className="delete-mindmap-button"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                deleteMindmap(mindmap.id);
+                                                handleDeleteMindmap(mindmap.id);
                                             }}
                                         >
                                             ×
@@ -204,17 +297,22 @@ const ProjectPage = () => {
                 </div>
             )}
             
-            <div className={`main-content ${sidebarCollapsed ? 'expanded' : ''}`}>
+            <div className={`main-content ${sidebarCollapsed ? 'expanded' : ''}`}
+                 ref={mindmapRef}
+                 onClick={handleClickOutside}
+            >
                 {selectedMindmap ? (
                     <MindMap
                         mindmapId={selectedMindmap}
                         projectId={projectId}
                         currentUser={currentUser}
+                        mindmapRef={mindmapRef}
+                        handleClickOutside={handleClickOutside}
                     />
                 ) : (
                     <div className="welcome">
-                        <h2>欢迎使用思维导图</h2>
-                        <p>从侧边栏选择一个思维导图或创建一个新的</p>
+                        <h2>这里是计划与提案</h2>
+                        <p>从左侧边栏选择一个导图查看，登录使用更多功能</p>
                         {(!currentUser || currentUser.id === 'guest') && (
                             <button className="welcome-auth-button" onClick={() => setShowAuth(true)}>
                                 登录/注册
@@ -262,55 +360,102 @@ const ProjectPage = () => {
                 </div>
             )}
 
-            {showDownloadModal && (
-                <div className="modal" onClick={() => setShowDownloadModal(false)}>
-                    <div className="download-modal-content" onClick={e => e.stopPropagation()}>
-                        <button className="close-button" onClick={() => setShowDownloadModal(false)}>×</button>
-                        <h3>下载项目: {projectId}</h3>
+            {showVotingModal && (
+                <div className="modal" onClick={() => setShowVotingModal(false)}>
+                    <div className="voting-modal-content" onClick={e => e.stopPropagation()}>
+                        <button className="close-button" onClick={() => setShowVotingModal(false)}>×</button>
+                        <h3>投票中的节点</h3>
                         
-                        <div className="download-section">
-                            <button 
-                                className="download-action-button" 
-                                onClick={downloadLatestRelease}
-                            >
-                                下载最新版本
-                            </button>
-                        </div>
-                        
-                        <div className="update-logs-section">
-                            <h4>更新日志</h4>
-                            {Object.keys(updateLogs).length > 0 ? (
-                                <div className="update-logs-list">
-                                    {Object.entries(updateLogs)
-                                        .sort(([versionA], [versionB]) => {
-                                            // 尝试按版本号排序，降序（新版本在前）
-                                            const partsA = versionA.split('.').map(Number);
-                                            const partsB = versionB.split('.').map(Number);
-                                            
-                                            for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
-                                                const partA = partsA[i] || 0;
-                                                const partB = partsB[i] || 0;
-                                                if (partA !== partB) {
-                                                    return partB - partA; // 降序排列
-                                                }
-                                            }
-                                            return 0;
-                                        })
-                                        .map(([version, changes]) => (
-                                            <div key={version} className="version-entry">
-                                                <h5>版本 {version}</h5>
-                                                <ul>
-                                                    {changes.map((change, index) => (
-                                                        <li key={index}>{change}</li>
-                                                    ))}
-                                                </ul>
+                        {votingNodes.length > 0 ? (
+                            <div className="voting-nodes-list">
+                                {votingNodes.map((node) => (
+                                    <div key={node.id} className="voting-node-item">
+                                        <div className="voting-node-header">
+                                            <h4>{node.text}</h4>
+                                            <div className="voting-node-meta">
+                                                <span>提交者: {node.submittedBy}</span>
+                                                <span>提交时间: {new Date(node.submittedAt).toLocaleDateString()}</span>
                                             </div>
-                                        ))}
-                                </div>
-                            ) : (
-                                <p className="no-logs">暂无更新日志</p>
-                            )}
-                        </div>
+                                        </div>
+                                        
+                                        <div className="voting-node-description">
+                                            {node.description}
+                                        </div>
+                                        
+                                        <div className="voting-node-stats">
+                                            <div className="vote-count">
+                                                <span className="upvote-count">👍 {node.upvotes?.length || 0}</span>
+                                                <span className="downvote-count">👎 {node.downvotes?.length || 0}</span>
+                                            </div>
+                                            <div className="voting-actions">
+                                                {currentUser && !votedNodes[node.id] && (
+                                                    <>
+                                                        <button 
+                                                            className="upvote-button"
+                                                            onClick={() => handleVote(node.id, 'up')}
+                                                        >
+                                                            赞成
+                                                        </button>
+                                                        <button 
+                                                            className="downvote-button"
+                                                            onClick={() => handleVote(node.id, 'down')}
+                                                        >
+                                                            反对
+                                                        </button>
+                                                    </>
+                                                )}
+                                                <button 
+                                                    className="comment-button"
+                                                    onClick={() => {
+                                                        setActiveNodeId(node.id);
+                                                        setShowCommentArea(true);
+                                                    }}
+                                                >
+                                                    评论
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        {activeNodeId === node.id && showCommentArea && (
+                                            <div className="comment-area">
+                                                <h5>评论区</h5>
+                                                {node.comments && node.comments.length > 0 ? (
+                                                    <div className="comments-list">
+                                                        {node.comments.map(comment => (
+                                                            <div key={comment.id} className="comment-item">
+                                                                <div className="comment-header">
+                                                                    <span className="comment-author">{comment.author}</span>
+                                                                    <span className="comment-date">
+                                                                        {new Date(comment.createdAt).toLocaleString()}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="comment-text">{comment.text}</div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <p className="no-comments">暂无评论</p>
+                                                )}
+                                                
+                                                {currentUser && (
+                                                    <div className="add-comment">
+                                                        <textarea
+                                                            value={newComment}
+                                                            onChange={(e) => setNewComment(e.target.value)}
+                                                            placeholder="写下您的评论..."
+                                                            rows="3"
+                                                        ></textarea>
+                                                        <button onClick={addComment}>发布评论</button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="no-voting-nodes">暂无投票中的节点</p>
+                        )}
                     </div>
                 </div>
             )}

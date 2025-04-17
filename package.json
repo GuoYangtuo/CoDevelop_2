@@ -1,5 +1,10 @@
 {
+  "name": "codevelop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "dependencies": {
-    "alipay-sdk": "^4.13.0"
+    "archiver": "^5.3.1",
+    "node-cron": "^3.0.2"
   }
 }

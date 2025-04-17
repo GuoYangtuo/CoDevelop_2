@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { createApiPath } from '../config';
 import './MindMap.css';
 
 const NODE_TYPES = {
@@ -9,7 +10,7 @@ const NODE_TYPES = {
   BUGFIX: 'bug修复'
 };
 
-const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
+const MindMap = ({ mindmapId, projectId = 'gameA', currentUser, mindmapRef, handleClickOutside }) => {
     const [nodes, setNodes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedNode, setSelectedNode] = useState(null);
@@ -42,14 +43,46 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
     const [draggedNode, setDraggedNode] = useState(null);
     const [dragOverNode, setDragOverNode] = useState(null);
     
-    const mindmapRef = useRef(null);
+    // 提交节点相关状态
+    const [showSubmitModal, setShowSubmitModal] = useState(false);
+    const [giteeUsername, setGiteeUsername] = useState('');
+    const [changeDescription, setChangeDescription] = useState('');
+    
+    // 用户支持节点记录
+    const [supportedNodes, setSupportedNodes] = useState(() => {
+        const saved = localStorage.getItem('supportedNodes');
+        return saved ? JSON.parse(saved) : [];
+    });
+    
     const nodeDetailsRef = useRef(null);
+    
+    // 获取cookie
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    };
+    
+    // 设置cookie
+    const setCookie = (name, value, days = 365) => {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=/`;
+    };
     
     useEffect(() => {
         if (mindmapId) {
             loadMindMap();
         }
     }, [mindmapId, projectId]);
+
+    // 节点折叠状态变化时保存到cookie
+    useEffect(() => {
+        if (collapsedNodes.size > 0 && mindmapId) {
+            const collapsedNodesArray = Array.from(collapsedNodes);
+            setCookie(`${projectId}_${mindmapId}_collapsedNodes`, JSON.stringify(collapsedNodesArray));
+        }
+    }, [collapsedNodes, mindmapId, projectId]);
 
     useEffect(() => {
         if (selectedNode) {
@@ -83,23 +116,58 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
         };
     }, []);
 
-    const handleClickOutside = (e) => {
-        // 如果点击在节点详情面板内，不要取消选中
-        if (nodeDetailsRef.current && nodeDetailsRef.current.contains(e.target)) {
-            return;
+    // 处理shift+滚轮横向滚动
+    useEffect(() => {
+        const handleWheel = (e) => {
+            if (e.shiftKey) {
+                e.preventDefault();
+                if (mindmapRef.current) {
+                    mindmapRef.current.scrollLeft += e.deltaY;
+                }
+            }
+        };
+
+        const mindmapElement = mindmapRef.current;
+        if (mindmapElement) {
+            mindmapElement.addEventListener('wheel', handleWheel, { passive: false });
         }
 
-        if (mindmapRef.current && mindmapRef.current.contains(e.target)) {
-            // 如果点击在思维导图区域内但不是节点，取消选中
-            if (!e.target.closest('.node')) {
-                setSelectedNode(null);
+        return () => {
+            if (mindmapElement) {
+                mindmapElement.removeEventListener('wheel', handleWheel);
             }
+        };
+    }, []);
+
+    useEffect(() => {
+        const oldHandleClickOutside = handleClickOutside;
+        
+        // 重新定义传入的handleClickOutside函数
+        if (typeof handleClickOutside === 'function') {
+            handleClickOutside = (e) => {
+                // 如果点击在节点详情面板内，不要取消选中
+                if (nodeDetailsRef.current && nodeDetailsRef.current.contains(e.target)) {
+                    return;
+                }
+
+                if (mindmapRef.current && mindmapRef.current.contains(e.target)) {
+                    // 如果点击在思维导图区域内但不是节点，取消选中
+                    if (!e.target.closest('.node')) {
+                        setSelectedNode(null);
+                    }
+                }
+                
+                // 调用原始的handleClickOutside
+                if (oldHandleClickOutside) {
+                    oldHandleClickOutside(e);
+                }
+            };
         }
-    };
+    }, [handleClickOutside, mindmapRef]);
 
     const loadMindMap = async () => {
         try {
-            const response = await axios.get(`http://localhost:3001/api/projects/${projectId}/mindmaps/${mindmapId}`);
+            const response = await axios.get(createApiPath(`api/projects/${projectId}/mindmaps/${mindmapId}`));
             setNodes(response.data.nodes || []);
             setMindmapData(response.data);
             
@@ -108,6 +176,17 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
                 setIsReadOnly(true);
             } else {
                 setIsReadOnly(false);
+            }
+            
+            // 从cookie读取折叠状态
+            const savedCollapsedNodes = getCookie(`${projectId}_${mindmapId}_collapsedNodes`);
+            if (savedCollapsedNodes) {
+                try {
+                    const parsedCollapsedNodes = JSON.parse(savedCollapsedNodes);
+                    setCollapsedNodes(new Set(parsedCollapsedNodes));
+                } catch (e) {
+                    console.error('Failed to parse collapsed nodes cookie:', e);
+                }
             }
             
             setLoading(false);
@@ -125,7 +204,7 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
                 nodes
             };
             
-            await axios.post(`http://localhost:3001/api/projects/${projectId}/mindmaps/${mindmapId}`, dataToSave);
+            await axios.post(createApiPath(`api/projects/${projectId}/mindmaps/${mindmapId}`), dataToSave);
             console.log('Mindmap saved successfully');
         } catch (error) {
             console.error('Failed to save mindmap:', error);
@@ -154,7 +233,8 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
             details: '',
             isCategory: newNodeIsCategory,
             supporters: {}, // 初始化空的支持者列表
-            comments: [] // 初始化评论列表
+            comments: [], // 初始化评论列表
+            supportCount: 0 // 初始化支持者数量
         };
 
         // 只有非分类节点才添加这些属性
@@ -246,17 +326,98 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
             });
         }
     };
+    
+    // 提交节点到投票中
+    const submitNodeToVoting = async () => {
+        if (!selectedNode) return;
+        if (!giteeUsername.trim()) {
+            alert('请输入Gitee昵称');
+            return;
+        }
+        
+        try {
+            // 获取当前投票节点数据
+            const response = await axios.get(createApiPath(`api/projects/${projectId}/onVoting.json`));
+            const votingData = response.data || { nodes: [] };
+            
+            // 添加节点到投票中
+            const nodeToSubmit = {
+                ...selectedNode,
+                submittedBy: giteeUsername,
+                submittedAt: new Date().toISOString(),
+                description: changeDescription,
+                upvotes: [],
+                downvotes: [],
+                comments: []
+            };
+            
+            votingData.nodes.push(nodeToSubmit);
+            
+            // 保存数据
+            await axios.post(createApiPath(`api/projects/${projectId}/onVoting.json`), votingData);
+            
+            alert('节点已成功提交到投票中');
+            setShowSubmitModal(false);
+            setGiteeUsername('');
+            setChangeDescription('');
+        } catch (error) {
+            console.error('提交节点失败:', error);
+            alert('提交节点失败');
+        }
+    };
+    
+    // 支持节点
+    const supportNode = (nodeId) => {
+        if (!currentUser) return;
+        
+        // 检查用户是否已经支持过该节点
+        if (supportedNodes.includes(nodeId)) {
+            return;
+        }
+        
+        // 更新节点的支持者数量
+        const updateNodeRecursive = (nodeList) => {
+            return nodeList.map(node => {
+                if (node.id === nodeId) {
+                    return { 
+                        ...node, 
+                        supportCount: (node.supportCount || 0) + 1 
+                    };
+                }
+                if (node.children) {
+                    return {
+                        ...node,
+                        children: updateNodeRecursive(node.children)
+                    };
+                }
+                return node;
+            });
+        };
+        
+        setNodes(updateNodeRecursive(nodes));
+        
+        // 更新已支持节点列表
+        const updatedSupportedNodes = [...supportedNodes, nodeId];
+        setSupportedNodes(updatedSupportedNodes);
+        localStorage.setItem('supportedNodes', JSON.stringify(updatedSupportedNodes));
+        
+        // 如果当前选中的是该节点，更新选中节点的状态
+        if (selectedNode && selectedNode.id === nodeId) {
+            setSelectedNode({
+                ...selectedNode,
+                supportCount: (selectedNode.supportCount || 0) + 1
+            });
+        }
+    };
 
     const toggleCollapse = (nodeId) => {
-        setCollapsedNodes(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(nodeId)) {
-                newSet.delete(nodeId);
-            } else {
-                newSet.add(nodeId);
-            }
-            return newSet;
-        });
+        const newCollapsed = new Set(collapsedNodes);
+        if (newCollapsed.has(nodeId)) {
+            newCollapsed.delete(nodeId);
+        } else {
+            newCollapsed.add(nodeId);
+        }
+        setCollapsedNodes(newCollapsed);
     };
 
     const getNodeTypeColor = (type) => {
@@ -274,38 +435,26 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
         }
     };
 
-    // 检查用户是否有权限编辑节点
     const canEditNode = (node) => {
-        // 如果是只读导图，只有管理员可以编辑
+        if (!currentUser) return false;
         if (isReadOnly) {
-            return currentUser && (
-                currentUser.id === 'admin' || 
-                currentUser.isAdmin
-            );
+            // 只读模式下，只有管理员可以编辑
+            return currentUser.id === 'admin' || currentUser.isAdmin;
         }
-        
-        return currentUser && (
-            currentUser.id === 'admin' || 
-            currentUser.isAdmin || 
-            currentUser.username === node.creatorName
-        );
+        return currentUser.id === 'admin' || currentUser.isAdmin || currentUser.userId === node.createdBy;
     };
 
-    // 检查用户是否有权限编辑导图
     const canEditMindmap = () => {
-        // 如果是只读导图，只有管理员可以编辑
+        if (!currentUser) return false;
         if (isReadOnly) {
-            return currentUser && (
-                currentUser.id === 'admin' || 
-                currentUser.isAdmin
-            );
+            // 只读模式下，只有管理员可以编辑
+            return currentUser.id === 'admin' || currentUser.isAdmin;
         }
-        
-        return currentUser && currentUser.id !== 'guest';
+        return true;
     };
 
-    // 处理捐赠功能
     const handleDonate = () => {
+        if (!selectedNode) return;
         setShowDonateModal(true);
     };
 
@@ -383,7 +532,6 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
         }
     };
 
-    // 拖拽排序相关函数
     const handleDragStart = (e, node) => {
         // 设置被拖拽的节点
         setDraggedNode(node);
@@ -478,7 +626,6 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
         setDragOverNode(null);
     };
 
-    // 添加评论
     const addComment = () => {
         if (!selectedNode || !newComment.trim()) return;
         
@@ -527,6 +674,9 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
 
         // 判断是否显示删除按钮
         const showDeleteButton = canEditNode(node);
+        
+        // 检查用户是否已经支持过该节点
+        const hasSupported = supportedNodes.includes(node.id);
 
         return (
             <div key={node.id} className={`node-container ${isRoot ? 'root' : ''}`}>
@@ -571,6 +721,16 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
                                     }}
                                 >×</button>
                             )}
+                            {/* 只有非分类节点才显示支持按钮 */}
+                            {currentUser && !hasSupported && !node.isCategory && (
+                                <button
+                                    className="action-button support"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        supportNode(node.id);
+                                    }}
+                                >↑</button>
+                            )}
                         </div>
                     </div>
                     <div className="info-container">{!node.isCategory && node.amount > 0 && (
@@ -578,6 +738,10 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
                     )}
                     <label className="node-creator">{node.creatorName}</label>
                     <label className="node-createdAt">{new Date(node.createdAt).toLocaleString()}</label>
+                    {/* 只有非分类节点才显示支持数量 */}
+                    {!node.isCategory && (
+                        <label className="node-support-count">↑ {node.supportCount || 0}</label>
+                    )}
                     </div>
                     
                 </div>
@@ -593,12 +757,7 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
     if (loading) return <div className="loading">加载中...</div>;
 
     return (
-        <div 
-            className="mindmap" 
-            onClick={handleClickOutside} 
-            ref={mindmapRef}
-        >
-            
+        <>
             {nodes.map(node => renderNode(node))}
             
             <div className="controls">
@@ -688,44 +847,31 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
 
             {selectedNode && (
                 <div className="node-details" ref={nodeDetailsRef}>
-                    <h3>{selectedNode.text}</h3>
-                    <div className="detail-item">
-                        <label>创建者:</label>
-                        <span>{selectedNode.creatorName || selectedNode.createdBy}</span>
-                    </div>
-                    <div className="detail-item">
-                        <label>创建时间:</label>
-                        <span>{new Date(selectedNode.createdAt).toLocaleString()}</span>
-                    </div>
-                    
-                    {selectedNode.isCategory ? (
-                        <div className="detail-item">
-                            <label>节点类型:</label>
-                            <span>分类节点</span>
-                        </div>
+                    {canEditNode(selectedNode) ? (
+                        <input
+                            type="text"
+                            value={editedNodeName}
+                            onChange={(e) => setEditedNodeName(e.target.value)}
+                            className="node-title-input"
+                        />
                     ) : (
-                        <>
-                            <div className="detail-item">
-                                <label>类型:</label>
-                                <span className={getNodeTypeColor(selectedNode.type)}>
-                                    {NODE_TYPES[selectedNode.type] || '未知'}
-                                </span>
-                            </div>
-                        </>
+                        <h3>{selectedNode.text}</h3>
                     )}
                     
-                    <div className="detail-item">
-                        <label>节点名称:</label>
-                        {canEditNode(selectedNode) ? (
-                            <input
-                                type="text"
-                                value={editedNodeName}
-                                onChange={(e) => setEditedNodeName(e.target.value)}
-                            />
-                        ) : (
-                            <span>{selectedNode.text}</span>
-                        )}
+                    <div className="node-meta">
+                        <span className="creator-info">{selectedNode.creatorName}</span>
+                        <span className="created-time">{new Date(selectedNode.createdAt).toLocaleString()}</span>
+                        <span className={`node-type ${getNodeTypeColor(selectedNode.type)}`}>
+                            {selectedNode.isCategory ? '分类节点' : NODE_TYPES[selectedNode.type] || '未知'}
+                        </span>
                     </div>
+                    
+                    <button 
+                        className="submit-node-button"
+                        onClick={() => setShowSubmitModal(true)}
+                    >
+                        提交
+                    </button>
                     
                     <div className="detail-item">
                         <label>详细信息:</label>
@@ -747,7 +893,7 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
                     
                     {!selectedNode.isCategory && (
                         <div className="supporters-section">
-                            <h4>支持者列表</h4>
+                            <h4>支持者</h4>
                             {Object.keys(selectedNode.supporters || {}).length > 0 ? (
                                 <div className="supporters-list">
                                     {Object.entries(selectedNode.supporters || {}).map(([userId, supporter]) => {
@@ -886,6 +1032,38 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
                 </div>
             )}
             
+            {/* 提交节点模态框 */}
+            {showSubmitModal && (
+                <div className="modal" onClick={() => setShowSubmitModal(false)}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <button className="close-button" onClick={() => setShowSubmitModal(false)}>×</button>
+                        <h3>提交节点到投票</h3>
+                        <div className="form-group">
+                            <label>Gitee昵称</label>
+                            <input
+                                type="text"
+                                value={giteeUsername}
+                                onChange={(e) => setGiteeUsername(e.target.value)}
+                                placeholder="请输入您的Gitee昵称"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>修改描述</label>
+                            <textarea
+                                value={changeDescription}
+                                onChange={(e) => setChangeDescription(e.target.value)}
+                                placeholder="请描述您提交的修改..."
+                                rows="5"
+                            ></textarea>
+                        </div>
+                        <div className="modal-actions">
+                            <button onClick={submitNodeToVoting}>提交</button>
+                            <button onClick={() => setShowSubmitModal(false)}>取消</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
             <div className="legend-hint">
                 {!showLegend ? '按住H显示图例' : ''}
             </div>
@@ -909,7 +1087,7 @@ const MindMap = ({ mindmapId, projectId = 'gameA', currentUser }) => {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 };
 
